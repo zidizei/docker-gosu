@@ -1,0 +1,19 @@
+name: Tagged Docker Image CI
+
+on:
+  push:
+    # Publish semver tags as releases.
+    tags: [ '*.*.*' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker Image
+        run: make
+
+      - name: Push to Docker Hub
+        run: |
+          docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_ACCESS_TOKEN }}
+          make push
